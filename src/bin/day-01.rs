@@ -1,7 +1,9 @@
 use aoc_2022::*;
 
+const MY_INPUT: &str = include_str!("../../inputs/day-01.txt");
+
 fn main() {
-    let input = parse_input(include_str!("../../inputs/day-01.txt"));
+    let input = parse_input(MY_INPUT);
     println!("part1: {}", part1(&input));
     println!("part2: {}", part2(&input));
 }
@@ -36,4 +38,48 @@ fn part2(elves: &Input) -> i32 {
 
 fn part1(elves: &Input) -> i32 {
     elves.iter().map(|elf| elf.iter().sum()).max().unwrap()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const SAMPLE: &str = "1000
+2000
+3000
+
+4000
+
+5000
+6000
+
+7000
+8000
+9000
+
+10000";
+
+    #[test]
+    fn part1_sample() {
+        let input = parse_input(SAMPLE);
+        assert_eq!(part1(&input), 24000);
+    }
+
+    #[test]
+    fn part2_sample() {
+        let input = parse_input(SAMPLE);
+        assert_eq!(part2(&input), 45000);
+    }
+
+    #[test]
+    fn part1_my_input() {
+        let input = parse_input(MY_INPUT);
+        assert_eq!(part1(&input), 72511);
+    }
+
+    #[test]
+    fn part2_my_input() {
+        let input = parse_input(MY_INPUT);
+        assert_eq!(part2(&input), 212117);
+    }
 }
