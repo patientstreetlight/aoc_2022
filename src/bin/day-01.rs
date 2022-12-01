@@ -12,10 +12,12 @@ type Input = Vec<Vec<i32>>;
 
 fn parse_input(s: &str) -> Input {
     grouped_lines(s)
-        .map(|group|
-            group.into_iter()
-            .map(|line| line.parse::<i32>().unwrap())
-            .collect())
+        .map(|group| {
+            group
+                .into_iter()
+                .map(|line| line.parse::<i32>().unwrap())
+                .collect()
+        })
         .collect()
 }
 
@@ -27,8 +29,8 @@ fn part2(elves: &Input) -> i32 {
         if calories > top_3[0] {
             top_3[0] = calories;
             let mut i = 0;
-            while i < top_3.len() - 1 && top_3[i] > top_3[i+1] {
-                top_3.swap(i, i+1);
+            while i < top_3.len() - 1 && top_3[i] > top_3[i + 1] {
+                top_3.swap(i, i + 1);
                 i += 1;
             }
         }
