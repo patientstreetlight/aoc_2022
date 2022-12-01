@@ -1,44 +1,39 @@
+use aoc_2022::*;
 
 fn main() {
-    let input = include_str!("../../inputs/day-01.txt");
-    println!("part1: {}", part1(input));
-    println!("part2: {}", part2(input));
+    let input = parse_input(include_str!("../../inputs/day-01.txt"));
+    println!("part1: {}", part1(&input));
+    println!("part2: {}", part2(&input));
 }
 
-fn part2(input: &str) -> i32 {
+type Input = Vec<Vec<i32>>;
+
+fn parse_input(s: &str) -> Input {
+    grouped_lines(s)
+        .map(|group|
+            group.into_iter()
+            .map(|line| line.parse::<i32>().unwrap())
+            .collect())
+        .collect()
+}
+
+fn part2(elves: &Input) -> i32 {
     // sorted lowest to highest
-    let mut top_3 = [0, 0, 0, 0];
-    fn insert(arr: &mut [i32]) {
-        let mut i = 0;
-        while i < arr.len() - 1 && arr[i] > arr[i+1] {
-            arr.swap(i, i+1);
-            i += 1;
-        }
-        arr[0] = 0;
-    }
-    for line in input.lines() {
-        if line.is_empty() {
-            insert(&mut top_3);
-        } else {
-            top_3[0] += line.parse::<i32>().unwrap();
-        }
-    }
-    insert(&mut top_3);
-    top_3.into_iter().sum()
-}
-
-fn part1(input: &str) -> i32 {
-    let mut max_cals = 0;
-    let mut curr_cals = 0;
-    for line in input.lines() {
-        if line.is_empty() {
-            curr_cals = 0;
-        } else {
-            curr_cals += line.parse::<i32>().unwrap();
-            if curr_cals > max_cals {
-                max_cals = curr_cals;
+    let mut top_3 = [0, 0, 0];
+    for elf in elves {
+        let calories = elf.iter().sum();
+        if calories > top_3[0] {
+            top_3[0] = calories;
+            let mut i = 0;
+            while i < top_3.len() - 1 && top_3[i] > top_3[i+1] {
+                top_3.swap(i, i+1);
+                i += 1;
             }
         }
     }
-    max_cals
+    top_3.into_iter().sum()
+}
+
+fn part1(elves: &Input) -> i32 {
+    elves.iter().map(|elf| elf.iter().sum()).max().unwrap()
 }
