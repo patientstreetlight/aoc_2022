@@ -1,4 +1,3 @@
-
 const MY_INPUT: &str = include_str!("../../inputs/day-03.txt");
 
 fn main() {
