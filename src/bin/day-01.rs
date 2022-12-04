@@ -1,5 +1,3 @@
-use aoc_2022::*;
-
 const MY_INPUT: &str = include_str!("../../inputs/day-01.txt");
 
 fn main() {
@@ -11,10 +9,10 @@ fn main() {
 type Input = Vec<Vec<i32>>;
 
 fn parse_input(s: &str) -> Input {
-    grouped_lines(s)
+    s.split("\n\n")
         .map(|group| {
             group
-                .into_iter()
+                .lines()
                 .map(|line| line.parse::<i32>().unwrap())
                 .collect()
         })
