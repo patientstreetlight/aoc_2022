@@ -43,9 +43,7 @@ fn parse_input(s: &str) -> Input {
 }
 
 fn stack_tops(stacks: &[Vec<char>]) -> String {
-    stacks.iter()
-        .map(|stack| *stack.last().unwrap())
-        .collect()
+    stacks.iter().map(|stack| *stack.last().unwrap()).collect()
 }
 
 fn part1(input: &Input) -> String {
