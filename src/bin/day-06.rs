@@ -6,23 +6,26 @@ fn main() {
 }
 
 fn search(s: &str, len: usize) -> usize {
+    fn to_index(c: u8) -> usize { (c - b'a') as usize }
     let cs = s.as_bytes();
-    cs.windows(len)
-        .enumerate()
-        .find(|&(_, w)| {
-            let mut set: u32 = 0;
-            w.iter().all(|c| {
-                let c = 1 << (c - b'a');
-                if set & c != 0 {
-                    false
-                } else {
-                    set |= c;
-                    true
-                }
-            })
-        })
-        .map(|(i, _)| i + len)
-        .unwrap()
+    // - i <= j
+    // - all characters in cs[i..j] are unique
+    // - for all k, i <= k < j, last_index_of[to_index(cs[k])] = Some(k)
+    let mut last_index_of:[Option<usize>; 26] = [None; 26];
+    let mut i = 0;
+    let mut j = 0;
+    while j - i != len {
+        let c = to_index(cs[j]);
+        if let Some(k) = last_index_of[c] {
+            while i <= k {
+                last_index_of[to_index(cs[i])] = None;
+                i += 1;
+            }
+        }
+        last_index_of[c] = Some(j);
+        j += 1;
+    }
+    j
 }
 
 fn part1(input: &str) -> usize {
