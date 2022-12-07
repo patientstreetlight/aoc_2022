@@ -6,12 +6,14 @@ fn main() {
 }
 
 fn search(s: &str, len: usize) -> usize {
-    fn to_index(c: u8) -> usize { (c - b'a') as usize }
+    fn to_index(c: u8) -> usize {
+        (c - b'a') as usize
+    }
     let cs = s.as_bytes();
     // - i <= j
     // - all characters in cs[i..j] are unique
     // - for all k, i <= k < j, last_index_of[to_index(cs[k])] = Some(k)
-    let mut last_index_of:[Option<usize>; 26] = [None; 26];
+    let mut last_index_of: [Option<usize>; 26] = [None; 26];
     let mut i = 0;
     let mut j = 0;
     while j - i != len {
