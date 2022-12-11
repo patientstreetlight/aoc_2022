@@ -1,6 +1,6 @@
 use bit_set::BitSet;
 
-const MY_INPUT: &str = include_str!("../../inputs/day-08.txt");
+const MY_INPUT: &str = include_str!("../../inputs/day-11.txt");
 
 fn main() {
     let input = parse_input(MY_INPUT);
@@ -91,7 +91,7 @@ fn scenic_score(input: &Input, r: usize, c: usize) -> usize {
     let num_rows = input.len();
     let num_cols = input[0].len();
     let tree = input[r][c];
-    fn viewing_distance(tree: u8, line_of_sight: &mut dyn Iterator<Item=u8>) -> usize {
+    fn viewing_distance(tree: u8, line_of_sight: &mut dyn Iterator<Item = u8>) -> usize {
         let mut distance = 0;
         for other_tree in line_of_sight {
             distance += 1;
@@ -104,8 +104,8 @@ fn scenic_score(input: &Input, r: usize, c: usize) -> usize {
     let mut left_line_of_sight = (0..c).rev().map(|c| input[r][c]);
     let mut right_line_of_sight = ((c + 1)..num_cols).map(|c| input[r][c]);
     let mut up_line_of_sight = (0..r).rev().map(|r| input[r][c]);
-    let mut down_line_of_sight = ((r+1)..num_rows).map(|r| input[r][c]);
-    let lines_of_sight: [&mut dyn Iterator<Item=u8>; 4] = [
+    let mut down_line_of_sight = ((r + 1)..num_rows).map(|r| input[r][c]);
+    let lines_of_sight: [&mut dyn Iterator<Item = u8>; 4] = [
         &mut left_line_of_sight,
         &mut right_line_of_sight,
         &mut up_line_of_sight,

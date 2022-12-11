@@ -14,7 +14,10 @@ type Input = Vec<(Dir, u8)>;
 
 #[derive(PartialEq, Eq, Debug, Clone, Copy)]
 enum Dir {
-    U, D, L, R,
+    U,
+    D,
+    L,
+    R,
 }
 
 impl FromStr for Dir {
@@ -32,11 +35,15 @@ impl FromStr for Dir {
 }
 
 fn parse_input(s: &str) -> Input {
-    s.lines().map(|line| {
-        let instruction: Vec<_> = line.split_ascii_whitespace().collect();
-        (instruction[0].parse::<Dir>().unwrap(), instruction[1].parse::<u8>().unwrap())
-    })
-    .collect()
+    s.lines()
+        .map(|line| {
+            let instruction: Vec<_> = line.split_ascii_whitespace().collect();
+            (
+                instruction[0].parse::<Dir>().unwrap(),
+                instruction[1].parse::<u8>().unwrap(),
+            )
+        })
+        .collect()
 }
 
 fn part1(input: &Input) -> usize {
@@ -110,7 +117,7 @@ fn part2(input: &Input) -> usize {
             }
             for i in 0..(rope.len() - 1) {
                 let head = rope[i];
-                let tail = &mut rope[i+1];
+                let tail = &mut rope[i + 1];
                 if !mv_tail(head, tail) {
                     break;
                 }
