@@ -1,6 +1,6 @@
 use bit_set::BitSet;
 
-const MY_INPUT: &str = include_str!("../../inputs/day-11.txt");
+const MY_INPUT: &str = include_str!("../../inputs/day-08.txt");
 
 fn main() {
     let input = parse_input(MY_INPUT);
