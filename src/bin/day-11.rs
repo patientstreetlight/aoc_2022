@@ -105,14 +105,13 @@ fn apply_op(op: Op, worry: Item) -> Item {
     }
 }
 
-fn part1(input: &Input) -> usize {
-    let mut monkeys = input.clone();
+fn part1(monkeys: &Input) -> usize {
+    let mut entries_per_monkey: Vec<_> =
+        monkeys.iter().map(|monkey| monkey.items.clone()).collect();
     let mut inspection_counts = vec![0; monkeys.len()];
     for _ in 0..20 {
-        for i in 0..monkeys.len() {
-            let monkey = &mut monkeys[i];
-            let items = std::mem::take(&mut monkey.items);
-            let monkey = monkey.clone();
+        for (i, monkey) in monkeys.iter().enumerate() {
+            let items = std::mem::take(&mut entries_per_monkey[i]);
             inspection_counts[i] += items.len();
             for item in items {
                 let item = apply_op(monkey.op, item) / 3;
@@ -121,7 +120,7 @@ fn part1(input: &Input) -> usize {
                 } else {
                     monkey.false_branch
                 };
-                monkeys[next_monkey].items.push(item);
+                entries_per_monkey[next_monkey].push(item);
             }
         }
     }
@@ -130,8 +129,9 @@ fn part1(input: &Input) -> usize {
     inspection_counts[n - 1] * inspection_counts[n - 2]
 }
 
-fn part2(input: &Input) -> usize {
-    let mut monkeys = input.clone();
+fn part2(monkeys: &Input) -> usize {
+    let mut entries_per_monkey: Vec<_> =
+        monkeys.iter().map(|monkey| monkey.items.clone()).collect();
     let base: Item = monkeys
         .iter()
         .map(|monkey| monkey.test_divisible)
@@ -139,10 +139,8 @@ fn part2(input: &Input) -> usize {
         .unwrap();
     let mut inspection_counts = vec![0; monkeys.len()];
     for _ in 0..10000 {
-        for i in 0..monkeys.len() {
-            let monkey = &mut monkeys[i];
-            let items = std::mem::take(&mut monkey.items);
-            let monkey = monkey.clone();
+        for (i, monkey) in monkeys.iter().enumerate() {
+            let items = std::mem::take(&mut entries_per_monkey[i]);
             inspection_counts[i] += items.len();
             for item in items {
                 let item = apply_op(monkey.op, item) % base;
@@ -151,7 +149,7 @@ fn part2(input: &Input) -> usize {
                 } else {
                     monkey.false_branch
                 };
-                monkeys[next_monkey].items.push(item);
+                entries_per_monkey[next_monkey].push(item);
             }
         }
     }
