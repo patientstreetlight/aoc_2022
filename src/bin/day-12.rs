@@ -1,5 +1,7 @@
 use std::collections::HashSet;
 
+use aoc_2022::Grid;
+
 const MY_INPUT: &str = include_str!("../../inputs/day-12.txt");
 
 fn main() {
@@ -9,49 +11,27 @@ fn main() {
 }
 
 struct Input {
-    heights: Vec<Vec<u8>>,
+    heights: Grid<u8>,
     start: (usize, usize),
     end: (usize, usize),
-}
-
-impl Input {
-    fn neighbors(&self, (r, c): (usize, usize)) -> Vec<(usize, usize)> {
-        let r = r as i32;
-        let c = c as i32;
-        let rows = self.heights.len() as i32;
-        let cols = self.heights[0].len() as i32;
-        [(-1, 0), (0, -1), (1, 0), (0, 1)]
-            .into_iter()
-            .map(|(dr, dc)| (r + dr, c + dc))
-            .filter(|&(r, c)| 0 <= r && r < rows && 0 <= c && c < cols)
-            .map(|(r, c)| (r as usize, c as usize))
-            .collect()
-    }
 }
 
 fn parse_input(s: &str) -> Input {
     let mut start = (0, 0);
     let mut end = (0, 0);
-    let heights = s
-        .lines()
-        .enumerate()
-        .map(|(r, line)| {
-            line.chars()
-                .enumerate()
-                .map(|(c, height)| match height {
-                    'S' => {
-                        start = (r, c);
-                        0
-                    }
-                    'E' => {
-                        end = (r, c);
-                        b'z' - b'a'
-                    }
-                    h => h as u8 - b'a',
-                })
-                .collect()
+    let heights = Grid::from_str(s, |rc, cs| {
+        cs.next().map(|c| match c {
+            'S' => {
+                start = rc;
+                0
+            }
+            'E' => {
+                end = rc;
+                b'z' - b'a'
+            }
+            _ => c as u8 - b'a',
         })
-        .collect();
+    });
     Input {
         heights,
         start,
@@ -66,10 +46,10 @@ fn part1(input: &Input) -> i32 {
     let mut distance = 1;
     while !frontier.is_empty() {
         let mut next_frontier = vec![];
-        for rc @ (r, c) in frontier {
-            let height = input.heights[r][c];
-            for n @ (nr, nc) in input.neighbors(rc) {
-                let n_height = input.heights[nr][nc];
+        for rc in frontier {
+            let height = input.heights[rc];
+            for n in input.heights.neighbors4(rc) {
+                let n_height = input.heights[n];
                 if n_height > height + 1 {
                     continue;
                 }
@@ -94,10 +74,10 @@ fn part2(input: &Input) -> u16 {
     let mut distance = 1;
     while !frontier.is_empty() {
         let mut new_frontier = vec![];
-        for rc @ (r, c) in frontier {
-            let height = input.heights[r][c];
-            for n @ (nr, nc) in input.neighbors(rc) {
-                let n_height = input.heights[nr][nc];
+        for rc in frontier {
+            let height = input.heights[rc];
+            for n in input.heights.neighbors4(rc) {
+                let n_height = input.heights[n];
                 if height > n_height + 1 {
                     continue;
                 }
