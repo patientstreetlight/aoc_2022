@@ -206,8 +206,7 @@ impl<'a, T> Iterator for Cols<'a, T> {
     }
 }
 
-impl<'a, T> ExactSizeIterator for Cols<'a, T> {
-}
+impl<'a, T> ExactSizeIterator for Cols<'a, T> {}
 
 impl<'a, T> DoubleEndedIterator for Cols<'a, T> {
     fn next_back(&mut self) -> Option<Self::Item> {
@@ -254,8 +253,7 @@ impl<'a, T> Iterator for Rows<'a, T> {
     }
 }
 
-impl<'a, T> ExactSizeIterator for Rows<'a, T> {
-}
+impl<'a, T> ExactSizeIterator for Rows<'a, T> {}
 
 impl<'a, T> DoubleEndedIterator for Rows<'a, T> {
     fn next_back(&mut self) -> Option<Self::Item> {
@@ -304,8 +302,7 @@ impl<'a, T> Iterator for Col<'a, T> {
     }
 }
 
-impl<'a, T> ExactSizeIterator for Col<'a, T> {
-}
+impl<'a, T> ExactSizeIterator for Col<'a, T> {}
 
 impl<'a, T> DoubleEndedIterator for Col<'a, T> {
     fn next_back(&mut self) -> Option<Self::Item> {
@@ -354,8 +351,7 @@ impl<'a, T> Iterator for Row<'a, T> {
     }
 }
 
-impl<'a, T> ExactSizeIterator for Row<'a, T> {
-}
+impl<'a, T> ExactSizeIterator for Row<'a, T> {}
 
 impl<'a, T> DoubleEndedIterator for Row<'a, T> {
     fn next_back(&mut self) -> Option<Self::Item> {
@@ -604,7 +600,11 @@ mod tests {
     #[test]
     fn cols_reversed() {
         let grid = Grid::from(vec![vec![1, 2], vec![3, 4]]);
-        let cols: Vec<Vec<_>> = grid.cols().rev().map(|col| col.copied().collect()).collect();
+        let cols: Vec<Vec<_>> = grid
+            .cols()
+            .rev()
+            .map(|col| col.copied().collect())
+            .collect();
         assert_eq!(vec![vec![2, 4], vec![1, 3]], cols);
     }
 
@@ -620,7 +620,11 @@ mod tests {
     #[test]
     fn rows_reversed() {
         let grid = Grid::from(vec![vec![1, 2], vec![3, 4]]);
-        let rows: Vec<Vec<_>> = grid.rows().rev().map(|row| row.copied().collect()).collect();
+        let rows: Vec<Vec<_>> = grid
+            .rows()
+            .rev()
+            .map(|row| row.copied().collect())
+            .collect();
         assert_eq!(vec![vec![3, 4], vec![1, 2]], rows);
     }
 }
