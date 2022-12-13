@@ -3,6 +3,8 @@ use std::{
     str::Chars,
 };
 
+use num_complex::Complex;
+
 pub struct Grid<T> {
     elems: Vec<T>,
     num_rows: usize,
@@ -404,47 +406,36 @@ impl<'a, T> Iterator for Neighbors8<'a, T> {
 pub struct Neighbors4<'a, T> {
     grid: &'a Grid<T>,
     src: (usize, usize),
-    idx: u8,
+    idx: i8,
 }
 
 impl<'a, T> Iterator for Neighbors4<'a, T> {
     type Item = (usize, usize);
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.idx > 3 {
-            return None;
-        }
-        let (r, c) = self.src;
         loop {
-            let i = self.idx;
-            self.idx += 1;
-            match i {
-                0 => {
-                    if r == 0 {
-                        continue;
-                    }
-                    return Some((r - 1, c));
-                }
-                1 => {
-                    if c == self.grid.num_cols - 1 {
-                        continue;
-                    }
-                    return Some((r, c + 1));
-                }
-                2 => {
-                    if r == self.grid.num_rows - 1 {
-                        continue;
-                    }
-                    return Some((r + 1, c));
-                }
-                3 => {
-                    if c == 0 {
-                        continue;
-                    }
-                    return Some((r, c - 1));
-                }
-                _ => return None,
+            if self.idx > 3 {
+                return None;
             }
+            // I've finally found a use for complex numbers! 😁
+            // They're good for modeling the rotations of 90
+            // degrees, like those needed for the 4 neighbors
+            // of a point.
+            let i: Complex<i8> = Complex::i();
+            let rot = i.powi(self.idx as i32);
+            let (r, c) = self.src;
+            self.idx += 1;
+            let r = (r as isize) + rot.re as isize;
+            let c = (c as isize) + rot.im as isize;
+            if r < 0 || c < 0 {
+                continue;
+            }
+            let r = r as usize;
+            let c = c as usize;
+            if r >= self.grid.num_rows || c >= self.grid.num_cols {
+                continue;
+            }
+            return Some((r, c));
         }
     }
 }
@@ -492,12 +483,12 @@ mod tests {
         let grid = Grid::from(vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]]);
         // top left
         assert_eq!(
-            vec![(0, 1), (1, 0)],
+            vec![(1, 0), (0, 1)],
             grid.neighbors4((0, 0)).collect::<Vec<(usize, usize)>>()
         );
         // bottom left
         assert_eq!(
-            vec![(1, 0), (2, 1)],
+            vec![(2, 1), (1, 0)],
             grid.neighbors4((2, 0)).collect::<Vec<(usize, usize)>>()
         );
         // top right
@@ -512,27 +503,27 @@ mod tests {
         );
         // top middle
         assert_eq!(
-            vec![(0, 2), (1, 1), (0, 0)],
+            vec![(1, 1), (0, 2), (0, 0)],
             grid.neighbors4((0, 1)).collect::<Vec<(usize, usize)>>()
         );
         // left middle
         assert_eq!(
-            vec![(0, 0), (1, 1), (2, 0)],
+            vec![(2, 0), (1, 1), (0, 0)],
             grid.neighbors4((1, 0)).collect::<Vec<(usize, usize)>>()
         );
         // right middle
         assert_eq!(
-            vec![(0, 2), (2, 2), (1, 1)],
+            vec![(2, 2), (0, 2), (1, 1)],
             grid.neighbors4((1, 2)).collect::<Vec<(usize, usize)>>()
         );
         // bottom middle
         assert_eq!(
-            vec![(1, 1), (2, 2), (2, 0)],
+            vec![(2, 2), (1, 1), (2, 0)],
             grid.neighbors4((2, 1)).collect::<Vec<(usize, usize)>>()
         );
         // middle
         assert_eq!(
-            vec![(0, 1), (1, 2), (2, 1), (1, 0)],
+            vec![(2, 1), (1, 2), (0, 1), (1, 0)],
             grid.neighbors4((1, 1)).collect::<Vec<(usize, usize)>>()
         );
     }
