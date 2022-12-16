@@ -19,22 +19,23 @@ fn parse_input(s: &str) -> Input {
         let (x, y) = xy.split_once(", ").unwrap();
         (parse_val(x), parse_val(y))
     }
-    s.lines().map(|line| {
-        let (sensor, beacon) = line.split_once(": ").unwrap();
-        (parse_point(sensor), parse_point(beacon))
-    })
-    .collect()
+    s.lines()
+        .map(|line| {
+            let (sensor, beacon) = line.split_once(": ").unwrap();
+            (parse_point(sensor), parse_point(beacon))
+        })
+        .collect()
 }
 
 fn manhattan_distance((x1, y1): (i32, i32), (x2, y2): (i32, i32)) -> i32 {
-    (x1-x2).abs() + (y1-y2).abs()
+    (x1 - x2).abs() + (y1 - y2).abs()
 }
 
 fn part1(input: &Input, target_row: i32) -> i32 {
     // In the row where y=2000000, how many positions cannot contain a beacon?
     let mut beacon_free: Vec<(i32, i32)> = vec![];
     for &(sensor, closest_beacon) in input {
-        let y_distance_to_target = (target_row-sensor.1).abs();
+        let y_distance_to_target = (target_row - sensor.1).abs();
         let distance_to_beacon = manhattan_distance(sensor, closest_beacon);
         if distance_to_beacon <= y_distance_to_target {
             continue;
