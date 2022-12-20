@@ -46,7 +46,7 @@ fn mix(input: &Input, num_iters: usize) -> i64 {
                     prevs[next] = prev;
                     // splice it in at the correct location
                     let mut parent = next;
-                    let val = (-*val as usize) % (n-1);
+                    let val = (-*val as usize) % (n - 1);
                     for _ in 0..val {
                         parent = prevs[parent];
                     }
@@ -68,7 +68,7 @@ fn mix(input: &Input, num_iters: usize) -> i64 {
                     nexts[prev] = next;
                     prevs[next] = prev;
                     // splice it in at the correct location
-                    let val: usize = *val as usize % (n-1);
+                    let val: usize = *val as usize % (n - 1);
                     let mut parent = prev;
                     for _ in 0..val {
                         parent = nexts[parent];
@@ -87,7 +87,10 @@ fn mix(input: &Input, num_iters: usize) -> i64 {
 }
 
 fn grove_coordinates(input: &Input, nexts: &[usize]) -> i64 {
-    [1000, 2000, 3000].into_iter().map(|i| num_at(input, nexts, i)).sum()
+    [1000, 2000, 3000]
+        .into_iter()
+        .map(|i| num_at(input, nexts, i))
+        .sum()
 }
 
 fn part1(input: &Input) -> i64 {
