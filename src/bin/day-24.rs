@@ -75,7 +75,7 @@ fn part1(input: &Input) -> usize {
 fn reach_goal(input: &Input, start_time: usize, start: (i32, i32), goal: (i32, i32)) -> usize {
     let mut positions = vec![start];
     let end = ((input.num_rows() - 1) as i32, (input.num_cols() - 2) as i32);
-    for t in (start_time+1).. {
+    for t in (start_time + 1).. {
         let mut next_positions = HashSet::new();
         let blizzards = blizzard_positions(input, t);
         for (r, c) in positions {

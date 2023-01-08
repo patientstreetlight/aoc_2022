@@ -1,4 +1,3 @@
-
 const MY_INPUT: &str = include_str!("../../inputs/day-25.txt");
 
 fn main() {
@@ -35,7 +34,7 @@ fn dec_to_snafu(n: i128) -> String {
     let mut bound = [0; 25];
     let mut base = 1;
     for d in 1..bound.len() {
-        bound[d] = 2 * base + bound[d-1];
+        bound[d] = 2 * base + bound[d - 1];
         base *= 5;
     }
     let mut snafu_digits_needed = 0;

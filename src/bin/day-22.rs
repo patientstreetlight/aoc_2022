@@ -39,10 +39,7 @@ fn parse_input(s: &str) -> Input {
     let (map, instructions) = s.split_once("\n\n").unwrap();
     let map = parse_map(map);
     let instructions = parse_instructions(instructions);
-    Input {
-        map,
-        instructions,
-    }
+    Input { map, instructions }
 }
 
 #[derive(Debug)]
@@ -160,7 +157,12 @@ fn next_pos(r: usize, c: usize, dir: Dir, map: &Map) -> (usize, usize) {
 
 #[derive(Debug, PartialEq, Eq)]
 enum Face {
-    A, B, C, D, E, F
+    A,
+    B,
+    C,
+    D,
+    E,
+    F,
 }
 
 fn pos_to_face(r: usize, c: usize) -> ((usize, usize), Face) {
@@ -259,7 +261,6 @@ fn next_pos_cube(r: usize, c: usize, dir: Dir, map: &Map) -> ((usize, usize), Di
     }
 }
 
-
 fn part1(input: &Input) -> usize {
     let mut r = 0;
     let mut c = input.map.min_col_in_row[0];
@@ -293,7 +294,7 @@ fn part1(input: &Input) -> usize {
             }
         }
     }
-    1000 * (r+1) + 4 * (c+1) + dir as usize
+    1000 * (r + 1) + 4 * (c + 1) + dir as usize
 }
 
 fn part2(input: &Input) -> usize {
@@ -330,7 +331,7 @@ fn part2(input: &Input) -> usize {
             }
         }
     }
-    1000 * (r+1) + 4 * (c+1) + dir as usize
+    1000 * (r + 1) + 4 * (c + 1) + dir as usize
 }
 
 #[cfg(test)]

@@ -42,22 +42,24 @@ struct Input<'a> {
 }
 
 fn parse_input(s: &str) -> Input {
-    let defs = s.lines().map(|line| {
-        let (var, rhs) = line.split_once(':').unwrap();
-        let mut rhs = rhs.split_ascii_whitespace();
-        let a = rhs.next().unwrap();
-        let expr = match a.parse::<i64>() {
-            Ok(a)  => Expr::Num(a),
-            _ => {
-                let op = rhs.next().unwrap().parse::<Op>().unwrap();
-                let b = rhs.next().unwrap();
-                assert!(rhs.next().is_none());
-                Expr::Bin(a, op, b)
-            }
-        };
-        (var, expr)
-    })
-    .collect();
+    let defs = s
+        .lines()
+        .map(|line| {
+            let (var, rhs) = line.split_once(':').unwrap();
+            let mut rhs = rhs.split_ascii_whitespace();
+            let a = rhs.next().unwrap();
+            let expr = match a.parse::<i64>() {
+                Ok(a) => Expr::Num(a),
+                _ => {
+                    let op = rhs.next().unwrap().parse::<Op>().unwrap();
+                    let b = rhs.next().unwrap();
+                    assert!(rhs.next().is_none());
+                    Expr::Bin(a, op, b)
+                }
+            };
+            (var, expr)
+        })
+        .collect();
     Input { defs }
 }
 

@@ -23,33 +23,42 @@ fn parse_input(s: &str) -> Input {
     positions
 }
 
-const DELTAS: &[(i32, i32)] = &[(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)];
+const DELTAS: &[(i32, i32)] = &[
+    (-1, -1),
+    (-1, 0),
+    (-1, 1),
+    (0, -1),
+    (0, 1),
+    (1, -1),
+    (1, 0),
+    (1, 1),
+];
 
-fn neighbors((r, c): (i32, i32)) -> impl Iterator<Item=(i32, i32)> {
+fn neighbors((r, c): (i32, i32)) -> impl Iterator<Item = (i32, i32)> {
     DELTAS.iter().map(move |&(dr, dc)| (r + dr, c + dc))
 }
 
 const NORTH_DELTAS: &[(i32, i32)] = &[(-1, -1), (-1, 0), (-1, 1)];
 
-fn north_neighbors((r, c): (i32, i32)) -> Box<dyn Iterator<Item=(i32, i32)>> {
+fn north_neighbors((r, c): (i32, i32)) -> Box<dyn Iterator<Item = (i32, i32)>> {
     Box::new(NORTH_DELTAS.iter().map(move |&(dr, dc)| (r + dr, c + dc)))
 }
 
 const SOUTH_DELTAS: &[(i32, i32)] = &[(1, -1), (1, 0), (1, 1)];
 
-fn south_neighbors((r, c): (i32, i32)) -> Box<dyn Iterator<Item=(i32, i32)>> {
+fn south_neighbors((r, c): (i32, i32)) -> Box<dyn Iterator<Item = (i32, i32)>> {
     Box::new(SOUTH_DELTAS.iter().map(move |&(dr, dc)| (r + dr, c + dc)))
 }
 
 const EAST_DELTAS: &[(i32, i32)] = &[(-1, 1), (0, 1), (1, 1)];
 
-fn east_neighbors((r, c): (i32, i32)) -> Box<dyn Iterator<Item=(i32, i32)>> {
+fn east_neighbors((r, c): (i32, i32)) -> Box<dyn Iterator<Item = (i32, i32)>> {
     Box::new(EAST_DELTAS.iter().map(move |&(dr, dc)| (r + dr, c + dc)))
 }
 
 const WEST_DELTAS: &[(i32, i32)] = &[(-1, -1), (0, -1), (1, -1)];
 
-fn west_neighbors((r, c): (i32, i32)) -> Box<dyn Iterator<Item=(i32, i32)>> {
+fn west_neighbors((r, c): (i32, i32)) -> Box<dyn Iterator<Item = (i32, i32)>> {
     Box::new(WEST_DELTAS.iter().map(move |&(dr, dc)| (r + dr, c + dc)))
 }
 
@@ -70,7 +79,7 @@ fn part1(input: &Input) -> i32 {
         // Maps proposed spot back to the elves who want to move there.
         let mut proposals: HashMap<(i32, i32), Vec<(i32, i32)>> = HashMap::new();
         let is_free = |elf| !positions.contains(&elf);
-        for &elf@(r, c) in &positions {
+        for &elf @ (r, c) in &positions {
             if neighbors(elf).all(is_free) {
                 // stays
                 next_positions.insert(elf);
@@ -79,10 +88,10 @@ fn part1(input: &Input) -> i32 {
                 let mut proposed = false;
                 for dir in DIRS.iter().cycle().skip(round % 4).take(4) {
                     let (pos, mut neighbors) = match dir {
-                        Dir::N => ((r-1, c), north_neighbors(elf)),
-                        Dir::S => ((r+1, c), south_neighbors(elf)),
-                        Dir::W => ((r, c-1), west_neighbors(elf)),
-                        Dir::E => ((r, c+1), east_neighbors(elf)),
+                        Dir::N => ((r - 1, c), north_neighbors(elf)),
+                        Dir::S => ((r + 1, c), south_neighbors(elf)),
+                        Dir::W => ((r, c - 1), west_neighbors(elf)),
+                        Dir::E => ((r, c + 1), east_neighbors(elf)),
                     };
                     if neighbors.all(is_free) {
                         proposals.entry(pos).or_default().push(elf);
@@ -123,7 +132,7 @@ fn part2(input: &Input) -> usize {
         let mut proposals: HashMap<(i32, i32), Vec<(i32, i32)>> = HashMap::new();
         let is_free = |elf| !positions.contains(&elf);
         let mut stable = true;
-        for &elf@(r, c) in &positions {
+        for &elf @ (r, c) in &positions {
             if neighbors(elf).all(is_free) {
                 // stays
                 next_positions.insert(elf);
@@ -133,10 +142,10 @@ fn part2(input: &Input) -> usize {
                 let mut proposed = false;
                 for dir in DIRS.iter().cycle().skip(round % 4).take(4) {
                     let (pos, mut neighbors) = match dir {
-                        Dir::N => ((r-1, c), north_neighbors(elf)),
-                        Dir::S => ((r+1, c), south_neighbors(elf)),
-                        Dir::W => ((r, c-1), west_neighbors(elf)),
-                        Dir::E => ((r, c+1), east_neighbors(elf)),
+                        Dir::N => ((r - 1, c), north_neighbors(elf)),
+                        Dir::S => ((r + 1, c), south_neighbors(elf)),
+                        Dir::W => ((r, c - 1), west_neighbors(elf)),
+                        Dir::E => ((r, c + 1), east_neighbors(elf)),
                     };
                     if neighbors.all(is_free) {
                         proposals.entry(pos).or_default().push(elf);
